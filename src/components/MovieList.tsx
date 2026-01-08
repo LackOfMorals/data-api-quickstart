@@ -24,7 +24,7 @@ export function MovieList({ onEdit, onManage }: MovieListProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['movies'],
     queryFn: async () => 
-      graphqlClient.request<GetMoviesResponse>(GET_MOVIES, { limit: 50 })
+      graphqlClient.request<GetMoviesResponse>(GET_MOVIES)
   });
   
   const deleteMovieMutation = useMutation({
@@ -35,42 +35,62 @@ export function MovieList({ onEdit, onManage }: MovieListProps) {
     }
   });
 
-  if (isLoading) return <div>Loading movies...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading) return <div className="text-center py-8">Loading movies...</div>;
+  if (error) return <div className="text-center py-8 text-red-600">Error: {error.message}</div>;
 
   return (
-    <div className="movie-list">
-      <h2>Movies</h2>
-      {data?.movies.map((movie: Movie) => (
-        <div key={movie.title} className="movie-card">
-          <h3>{movie.title}</h3>
-          <p>Released: {movie.released}</p>
-          <p>{movie.tagline}</p>
+    <div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Movies</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data?.movies.map((movie: Movie) => {
+          const actors = movie.peopleActedIn || [];
+          const directors = movie.peopleDirected || [];
           
-          <div className="people">
-            <div>
-              <strong>Actors:</strong> {movie.actors?.map(a => a.name).join(', ') || 'None'}
-            </div>
-            <div>
-              <strong>Directors:</strong> {movie.directors?.map(d => d.name).join(', ') || 'None'}
-            </div>
-          </div>
+          return (
+            <div key={movie.title} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{movie.title}</h3>
+              <p className="text-gray-600 mb-1">Released: {Number(movie.released)}</p>
+              {movie.tagline && <p className="text-gray-700 mb-4 italic">{movie.tagline}</p>}
+              
+              <div className="space-y-2 mb-4 text-sm">
+                <div>
+                  <strong className="text-gray-700">Actors:</strong>{' '}
+                  <span className="text-gray-600">{actors.map(a => a.name).join(', ') || 'None'}</span>
+                </div>
+                <div>
+                  <strong className="text-gray-700">Directors:</strong>{' '}
+                  <span className="text-gray-600">{directors.map(d => d.name).join(', ') || 'None'}</span>
+                </div>
+              </div>
 
-          <div className="actions">
-            <button onClick={() => onEdit(movie)}>Edit</button>
-            <button onClick={() => onManage(movie)}>Manage Cast</button>
-            <button 
-              onClick={() => {
-                if (confirm(`Delete "${movie.title}"?`)) {
-                  deleteMovieMutation.mutate(movie.title);
-                }
-              }}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      ))}
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => onEdit(movie)}
+                  className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Edit
+                </button>
+                <button 
+                  onClick={() => onManage(movie)}
+                  className="flex-1 px-3 py-2 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  Manage Cast
+                </button>
+                <button 
+                  onClick={() => {
+                    if (confirm(`Delete "${movie.title}"?`)) {
+                      deleteMovieMutation.mutate(movie.title);
+                    }
+                  }}
+                  className="px-3 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 # Neo4j DataAPI GraphQL Quick Start
 
-A comprehensive guide to building a movie management application using Neo4j DataAPI GraphQL, React, TypeScript, and graphql-request.
+A comprehensive guide to building a movie management application using Neo4j DataAPI GraphQL, React, TypeScript, graphql-request, and Tailwind CSS.
 
 ## What's Inside
 
@@ -11,6 +11,7 @@ This quick start demonstrates:
 - ✅ Global search across all entities
 - ✅ Modern React + TypeScript + GraphQL stack
 - ✅ graphql-request + React Query for efficient data fetching
+- ✅ Tailwind CSS for beautiful, responsive styling
 - ✅ Clean component architecture
 - ✅ Type-safe GraphQL operations
 
@@ -25,7 +26,9 @@ Read the complete guide in [QUICKSTART.md](./QUICKSTART.md)
 - **Vite** - Fast build tool
 - **graphql-request** - Lightweight GraphQL client
 - **TanStack Query (React Query)** - Powerful data fetching and caching
-- **Neo4j DataAPI GraphQL** - Graph database with GraphQL API
+- **Tailwind CSS** - Utility-first CSS framework
+- **Neo4j Aura** - Graph database
+- **DataAPI GraphQL** - GraphQL API layer
 
 ## Prerequisites
 
@@ -33,12 +36,33 @@ Read the complete guide in [QUICKSTART.md](./QUICKSTART.md)
 - Neo4j Aura instance with DataAPI GraphQL enabled
 - Movies dataset loaded in your database
 
-## Quick Links
+## Quick Start
 
-- [Neo4j Aura](https://neo4j.com/cloud/aura/)
-- [DataAPI GraphQL Documentation](https://neo4j.com/docs/aura/data-apis/graphql/)
-- [graphql-request Documentation](https://github.com/jasonkuhrt/graphql-request)
-- [TanStack Query Documentation](https://tanstack.com/query/latest)
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/data-api-quickstart.git
+cd data-api-quickstart
+
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your Neo4j credentials
+
+# Run development server
+npm run dev
+```
+
+## Documentation
+
+- **[QUICKSTART.md](./QUICKSTART.md)** ⭐ - Complete step-by-step tutorial
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Setup and installation
+- **[BEST_PRACTICES.md](./BEST_PRACTICES.md)** - Production-ready patterns
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Common issues and solutions
+- **[ADVANCED_EXAMPLES.md](./ADVANCED_EXAMPLES.md)** - Advanced features
+- **[TAILWIND_GUIDE.md](./TAILWIND_GUIDE.md)** - Tailwind CSS usage guide
+- **[INDEX.md](./INDEX.md)** - Complete documentation index
 
 ## Features
 
@@ -69,41 +93,53 @@ Read the complete guide in [QUICKSTART.md](./QUICKSTART.md)
 ```
 movie-manager/
 ├── src/
-│   ├── components/
+│   ├── components/          # React components
 │   │   ├── MovieList.tsx
 │   │   ├── MovieForm.tsx
 │   │   ├── Search.tsx
 │   │   └── RelationshipManager.tsx
-│   ├── graphql/
+│   ├── graphql/            # GraphQL operations
 │   │   └── operations.ts
-│   ├── lib/
+│   ├── lib/                # Utilities & config
 │   │   └── graphql-client.ts
-│   ├── types/
+│   ├── types/              # TypeScript types
 │   │   └── movie.ts
-│   ├── App.tsx
-│   └── App.css
-├── .env
-└── package.json
+│   ├── App.tsx             # Main application
+│   └── main.tsx            # Entry point
+├── tailwind.config.js      # Tailwind configuration
+├── .env.example            # Environment template
+└── package.json            # Dependencies
 ```
+
+## Styling with Tailwind CSS
+
+This project uses Tailwind CSS for styling. See [TAILWIND_GUIDE.md](./TAILWIND_GUIDE.md) for:
+- How to use utility classes
+- Common patterns
+- Customization options
+- Responsive design
+- VS Code setup
 
 ## Contributing
 
-This is a quick start guide. Feel free to extend it with:
-- Pagination
-- Optimistic updates
-- Error boundaries
-- Loading skeletons
-- Advanced filtering
-- Sorting options
-- Export functionality
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for details on how to contribute.
 
 ## License
 
-MIT
+MIT - See [LICENSE](./LICENSE) for details
 
 ## Support
 
 For issues or questions:
-- Neo4j Community Forum
-- Neo4j Discord
-- GitHub Issues
+- [Neo4j Community Forum](https://community.neo4j.com/)
+- [Neo4j Discord](https://discord.gg/neo4j)
+- [GitHub Issues](https://github.com/YOUR_USERNAME/data-api-quickstart/issues)
+
+## Next Steps
+
+1. ⭐ Star this repository
+2. 📖 Follow the [QUICKSTART.md](./QUICKSTART.md) guide
+3. 💬 Join the [Neo4j Community](https://community.neo4j.com/)
+4. 🚀 Build something amazing!
+
+Happy coding! 🎉

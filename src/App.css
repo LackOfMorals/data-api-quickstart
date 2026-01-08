@@ -185,6 +185,13 @@ button:disabled {
   background: #c82333;
 }
 
+.no-data {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+  margin: 10px 0;
+}
+
 .add-person {
   display: flex;
   gap: 10px;
