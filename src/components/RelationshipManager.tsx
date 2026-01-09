@@ -16,7 +16,7 @@ interface Props {
 }
 
 interface GetPeopleResponse {
-  people: { name: string; born?: bigint | number }[];
+  people: { name: string; born?: number }[];
 }
 
 export function RelationshipManager({ movie, onComplete }: Props) {
