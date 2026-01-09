@@ -1,11 +1,11 @@
 export interface Person {
   name: string;
-  born?: bigint | number; // BigInt in schema, but we'll handle as number in JS
+  born?: number; // It's an Int in the GraphQL schema but number works here. 
 }
 
 export interface Movie {
   title: string;
-  released: bigint | number; // BigInt! is required in schema
+  released: number ; // It's an Int in the GraphQL schema but number works here. 
   tagline?: string;
   peopleActedIn?: Person[];
   peopleDirected?: Person[];
@@ -13,11 +13,11 @@ export interface Movie {
 
 export interface MovieFormData {
   title: string;
-  released: number; // We'll convert to BigInt when sending
+  released: number; // It's an Int in the GraphQL schema but number works here. 
   tagline?: string;
 }
 
 export interface PersonFormData {
   name: string;
-  born?: number;
+  born?: number; // It's an Int in the GraphQL schema but number works here. 
 }
