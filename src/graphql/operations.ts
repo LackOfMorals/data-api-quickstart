@@ -167,88 +167,83 @@ export const DELETE_PERSON = gql`
 
 // Connect relationships (top-level connect argument)
 export const ASSIGN_ACTOR = gql`
-  mutation AssignActor($movieTitle: String!, $actorName: String!) {
-    updateMovies(
-      where: { title: $movieTitle }
-      connect: { 
-        peopleActedIn: [{ 
-          where: { 
-            node: { name: $actorName } 
-          } 
-        }] 
-      }
-    ) {
-      movies {
-        title
-        peopleActedIn {
-          name
+mutation AssignActor($movieTitle: String!, $actorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleActedIn: {
+        connect: {
+          edge: { roles: "actor" }
+          where: { node: { name: { eq: $actorName } } }
         }
       }
     }
+  ) {
+    movies {
+      title
+      peopleActedIn {
+        name
+      }
+    }
   }
+}
 `;
 
 export const ASSIGN_DIRECTOR = gql`
-  mutation AssignDirector($movieTitle: String!, $directorName: String!) {
-    updateMovies(
-      where: { title: $movieTitle }
-      connect: { 
-        peopleDirected: [{ 
-          where: { 
-            node: { name: $directorName } 
-          } 
-        }] 
+mutation AssignDirector($movieTitle: String!, $directorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleDirected: {
+        connect: { where: { node: { name: { eq: $directorName } } } }
       }
-    ) {
-      movies {
-        title
-        peopleDirected {
-          name
-        }
+    }
+  ) {
+    movies {
+      title
+      peopleDirected {
+        name
       }
     }
   }
+}
 `;
 
 // Disconnect relationships (nested in update argument)
 export const REMOVE_ACTOR = gql`
-  mutation RemoveActor($movieTitle: String!, $actorName: String!) {
-    updateMovies(
-      where: { title: $movieTitle }
-      update: {
-        peopleActedIn: [{
-          disconnect: [{
-            where: {
-              node: { name: $actorName }
-            }
-          }]
-        }]
-      }
-    ) {
-      movies {
-        title
-        peopleActedIn {
-          name
+mutation RemoveActor($movieTitle: String!, $actorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleActedIn: {
+        disconnect: {
+          where: { node: { name: { eq: $actorName } } }
         }
       }
     }
+  ) {
+    movies {
+      title
+      peopleActedIn {
+        name
+      }
+    }
   }
+}
 `;
 
 export const REMOVE_DIRECTOR = gql`
   mutation RemoveDirector($movieTitle: String!, $directorName: String!) {
     updateMovies(
-      where: { title: $movieTitle }
-      update: {
-        peopleDirected: [{
-          disconnect: [{
-            where: {
-              node: { name: $directorName }
-            }
-          }]
-        }]
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleDirected: {
+        disconnect: {
+          where: { node: { name: { eq: $directorName } } }
+        }
       }
-    ) {
+    }
+  ) {
       movies {
         title
         peopleDirected {
