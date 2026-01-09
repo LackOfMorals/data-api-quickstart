@@ -4,7 +4,7 @@ Build a Movie Management Application with React, TypeScript, and GraphQL
 
 ## Overview
 
-This guide walks you through building a single-page application to manage the Neo4j Movie graph using DataAPI GraphQL. You'll implement full CRUD operations for movies, actors, and directors, plus search functionality.
+This guide walks you through building a single-page application to manage the Neo4j Movie graph using DataAPI GraphQL. You'll implement full CRUD operations and search functionality.
 
 ## Prerequisites
 
