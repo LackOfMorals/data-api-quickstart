@@ -12,15 +12,30 @@ Complete guide to building with Neo4j DataAPI GraphQL, React, and TypeScript.
    - Quick links
    - Feature list
 
-2. **[QUICKSTART.md](./QUICKSTART.md)** ⭐ Start Here!
-   - Step-by-step tutorial
-   - Project setup
-   - Component creation
-   - Complete working example
+2. **[TUTORIAL.md](./TUTORIAL.md)** ⭐ Recommended for Learning!
+   - Comprehensive 8-chapter tutorial
+   - Step-by-step application building
+   - Detailed explanations of concepts
+   - GraphQL and graph database fundamentals
+   - Complete with code examples and styling
+   - Includes deployment guide
+   - Best for: Learning Neo4j GraphQL from scratch
+
+3. **[QUICKSTART.md](./QUICKSTART.md)** ⚡ Quick Reference
+   - Condensed code reference
+   - All components in one place
+   - Minimal explanations
+   - Best for: Experienced developers who want working code fast
+
+4. **[GETTING_STARTED.md](./GETTING_STARTED.md)**
+   - Environment setup
+   - Neo4j Aura configuration
+   - DataAPI GraphQL setup
+   - Dependencies installation
 
 ### Reference Guides
 
-3. **[BEST_PRACTICES.md](./BEST_PRACTICES.md)**
+5. **[BEST_PRACTICES.md](./BEST_PRACTICES.md)**
    - GraphQL query design patterns
    - React Query best practices
    - Component architecture
@@ -30,7 +45,7 @@ Complete guide to building with Neo4j DataAPI GraphQL, React, and TypeScript.
    - Testing strategies
    - Deployment tips
 
-4. **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)**
+6. **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)**
    - Common issues and solutions
    - Authentication problems
    - CORS errors
@@ -38,7 +53,7 @@ Complete guide to building with Neo4j DataAPI GraphQL, React, and TypeScript.
    - Performance issues
    - Debugging techniques
 
-5. **[ADVANCED_EXAMPLES.md](./ADVANCED_EXAMPLES.md)**
+7. **[ADVANCED_EXAMPLES.md](./ADVANCED_EXAMPLES.md)**
    - Pagination (offset & cursor)
    - Infinite scroll
    - Optimistic updates
@@ -46,39 +61,94 @@ Complete guide to building with Neo4j DataAPI GraphQL, React, and TypeScript.
    - Advanced search & filtering
    - Data import/export
 
+8. **[SCHEMA.md](./SCHEMA.md)**
+   - GraphQL schema overview
+   - Type definitions
+   - Field resolvers
+   - Relationship patterns
+
+9. **[TAILWIND_GUIDE.md](./TAILWIND_GUIDE.md)**
+   - Tailwind CSS setup
+   - Utility class reference
+   - Component styling patterns
+   - Responsive design
+
 ### Examples
 
-6. **[examples/](./examples/)**
-   - `package.json` - Complete dependencies list
-   - More examples coming soon!
+10. **[examples/](./examples/)**
+    - `package.json` - Complete dependencies list
+    - More examples coming soon!
 
-7. **[.env.example](./.env.example)**
-   - Environment variable template
+11. **[.env.example](./.env.example)**
+    - Environment variable template
 
 ---
 
-## 🎯 Learning Path
+## 🎯 Learning Paths
 
-### Beginner
+### Beginner - New to Neo4j GraphQL
+**Recommended: Follow the Tutorial**
+
+1. Read [README.md](./README.md) for project overview
+2. **Complete [TUTORIAL.md](./TUTORIAL.md) chapters 1-8**
+   - Chapter 1: Set Up Your Environment
+   - Chapter 2: Read Data from Neo4j
+   - Chapter 3: Create New Data
+   - Chapter 4: Update Existing Data
+   - Chapter 5: Delete Data
+   - Chapter 6: Manage Relationships
+   - Chapter 7: Search and Filter
+   - Chapter 8: Deploy Your Application
+3. Reference [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when stuck
+4. Experiment with the working application
+5. Try the "Try It Yourself" challenges in each chapter
+
+### Intermediate - Familiar with GraphQL
+**Recommended: Quick Start + Best Practices**
+
 1. Read [README.md](./README.md) for overview
-2. Follow [QUICKSTART.md](./QUICKSTART.md) step-by-step
-3. Get your app running locally
-4. Experiment with the basic features
+2. Follow [QUICKSTART.md](./QUICKSTART.md) to build the app
+3. Review [BEST_PRACTICES.md](./BEST_PRACTICES.md)
+4. Implement proper error handling
+5. Add type safety with TypeScript
+6. Set up React Query DevTools
+7. Refer to [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when needed
 
-### Intermediate
-1. Review [BEST_PRACTICES.md](./BEST_PRACTICES.md)
-2. Implement proper error handling
-3. Add type safety with TypeScript
-4. Set up React Query DevTools
-5. Refer to [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when stuck
+### Advanced - Experienced with Neo4j
+**Recommended: Advanced Examples + Customization**
 
-### Advanced
-1. Study [ADVANCED_EXAMPLES.md](./ADVANCED_EXAMPLES.md)
-2. Implement pagination or infinite scroll
-3. Add optimistic updates
-4. Create batch operations
-5. Build advanced search features
-6. Optimize performance
+1. Skim [QUICKSTART.md](./QUICKSTART.md) for patterns
+2. Study [ADVANCED_EXAMPLES.md](./ADVANCED_EXAMPLES.md)
+3. Implement pagination or infinite scroll
+4. Add optimistic updates
+5. Create batch operations
+6. Build advanced search features
+7. Optimize performance
+8. Customize for your use case
+
+---
+
+## 📖 Tutorial vs Quick Start
+
+### When to Use the Tutorial ([TUTORIAL.md](./TUTORIAL.md))
+
+✅ You're **new to Neo4j** or graph databases  
+✅ You want to **understand why** things work  
+✅ You prefer **progressive learning** with explanations  
+✅ You want to see **complete, working code** for each step  
+✅ You need help with **deployment and production**  
+
+**Time investment:** 2-4 hours to complete all chapters
+
+### When to Use the Quick Start ([QUICKSTART.md](./QUICKSTART.md))
+
+✅ You're **already familiar** with GraphQL and React  
+✅ You want **working code fast** without explanations  
+✅ You need a **reference** to copy-paste from  
+✅ You prefer to **figure things out** as you go  
+✅ You're **adapting** this code for your own project  
+
+**Time investment:** 30-60 minutes to get running
 
 ---
 
@@ -89,18 +159,21 @@ Complete guide to building with Neo4j DataAPI GraphQL, React, and TypeScript.
 - **Mutations**: Create, update, delete data
 - **Variables**: Type-safe query parameters
 - **Fragments**: Reusable field selections
+- **Filtering**: WHERE clauses with operators
 
 ### React Query
 - **useQuery**: Fetch and cache data
 - **useMutation**: Modify data
 - **Query Keys**: Cache identification
 - **Invalidation**: Refresh stale data
+- **Optimistic Updates**: UI updates before server confirms
 
 ### Neo4j DataAPI GraphQL
 - **Nodes**: Movies, People entities
 - **Relationships**: ACTED_IN, DIRECTED
-- **Filtering**: WHERE clauses
-- **Aggregations**: Count, min, max, average
+- **Connect/Disconnect**: Relationship management
+- **Traversal**: Following relationships in queries
+- **Filtering**: Complex WHERE conditions
 
 ### Component Architecture
 - **Container Components**: Data fetching
@@ -119,6 +192,7 @@ Complete guide to building with Neo4j DataAPI GraphQL, React, and TypeScript.
 | Vite | 5+ | Build tool |
 | graphql-request | 6+ | GraphQL client |
 | TanStack Query | 5+ | Data fetching & caching |
+| Tailwind CSS | 3+ | Styling |
 | Neo4j Aura | - | Graph database |
 | DataAPI GraphQL | - | GraphQL API layer |
 
@@ -212,6 +286,8 @@ movie-manager/
 ├── package.json            # Dependencies
 ├── tsconfig.json           # TypeScript config
 ├── vite.config.ts          # Vite config
+├── TUTORIAL.md             # 8-chapter tutorial
+├── QUICKSTART.md           # Quick reference
 └── README.md               # Project overview
 ```
 
@@ -225,22 +301,21 @@ movie-manager/
 - [Neo4j Community Forum](https://community.neo4j.com/)
 - [Neo4j Discord](https://discord.gg/neo4j)
 - [Neo4j GraphQL Library](https://neo4j.com/docs/graphql-manual/current/)
+- [Neo4j GraphAcademy](https://graphacademy.neo4j.com/)
 
 ### GraphQL Resources
 - [GraphQL Official](https://graphql.org/)
 - [graphql-request Docs](https://github.com/jasonkuhrt/graphql-request)
 - [GraphQL Best Practices](https://graphql.org/learn/best-practices/)
+- [How to GraphQL](https://www.howtographql.com/)
 
 ### React & TypeScript Resources
 - [React Docs](https://react.dev/)
 - [TypeScript Docs](https://www.typescriptlang.org/)
 - [TanStack Query Docs](https://tanstack.com/query/latest)
+- [TanStack Query Tutorial](https://ui.dev/react-query)
 - [Vite Docs](https://vitejs.dev/)
-
-### Learning Resources
-- [Neo4j GraphAcademy](https://graphacademy.neo4j.com/)
-- [GraphQL Tutorials](https://www.howtographql.com/)
-- [React Query Tutorial](https://ui.dev/react-query)
+- [Tailwind CSS Docs](https://tailwindcss.com/)
 
 ---
 
@@ -255,6 +330,8 @@ This guide is a living document. Contributions welcome!
 - Add new advanced patterns
 - Improve error messages
 - Enhance documentation
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ---
 
@@ -315,6 +392,18 @@ const { data } = useQuery({
   queryFn: () => graphqlClient.request(QUERY, { id }),
   enabled: !!id
 });
+
+// Relationship Connect
+updateMovies(
+  where: { title: "Movie" }
+  connect: { actors: { where: { node: { name: "Actor" }}}}
+)
+
+// Relationship Disconnect
+updateMovies(
+  where: { title: "Movie" }
+  disconnect: { actors: { where: { node: { name: "Actor" }}}}
+)
 ```
 
 ---
@@ -342,9 +431,10 @@ Stuck? Here's where to get help:
 
 1. **Check the docs** - Start with [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 2. **Search examples** - Look in [ADVANCED_EXAMPLES.md](./ADVANCED_EXAMPLES.md)
-3. **Community forum** - [Neo4j Community](https://community.neo4j.com/)
-4. **Discord** - [Neo4j Discord Server](https://discord.gg/neo4j)
-5. **Stack Overflow** - Tag questions with `neo4j` and `graphql`
+3. **Tutorial chapters** - Review specific [TUTORIAL.md](./TUTORIAL.md) chapters
+4. **Community forum** - [Neo4j Community](https://community.neo4j.com/)
+5. **Discord** - [Neo4j Discord Server](https://discord.gg/neo4j)
+6. **Stack Overflow** - Tag questions with `neo4j` and `graphql`
 
 ---
 
@@ -358,8 +448,9 @@ MIT License - Feel free to use this guide for learning and building your own app
 
 Ready to start building?
 
-1. ⭐ Begin with [QUICKSTART.md](./QUICKSTART.md)
-2. 💬 Join the [Neo4j Community](https://community.neo4j.com/)
-3. 🚀 Build something amazing!
+1. **New to Neo4j GraphQL?** → Start with [TUTORIAL.md](./TUTORIAL.md)
+2. **Need quick reference?** → Jump to [QUICKSTART.md](./QUICKSTART.md)
+3. **Want to contribute?** → See [CONTRIBUTING.md](./CONTRIBUTING.md)
+4. **Join the community** → [Neo4j Discord](https://discord.gg/neo4j)
 
 Happy coding! 🎉
