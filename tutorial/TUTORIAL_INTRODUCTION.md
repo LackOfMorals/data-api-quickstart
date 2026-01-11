@@ -19,18 +19,19 @@ By the end of this tutorial, you'll have a fully functional web application that
 - Creating and modifying data with GraphQL mutations
 - Managing relationships in a graph database
 - Implementing search functionality across connected data
-- Building a responsive React application with TypeScript
+
 
 ## Prerequisites
 
 Before you begin, make sure you have:
 
 - **Node.js 18 or later** installed on your computer
-- **A Neo4j Aura account** with a free database instance
-- **Basic knowledge** of JavaScript/TypeScript and React
-- **A code editor** like VS Code
+- **A Neo4j Aura account** with a Pro, paid or free trial,  database instance
+- **Basic knowledge** of JavaScript/TypeScript, React and GraphQL
+- **A code editor** like VS Codium
 
-If you don't have a Neo4j Aura account, you can [sign up for free](https://neo4j.com/cloud/aura-free/).
+
+If you don't have a Neo4j Aura account, you can [sign up for free Pro trail](https://neo4j.com/cloud/aura-free/).
 
 ## Tutorial Overview
 

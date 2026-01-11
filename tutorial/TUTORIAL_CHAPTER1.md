@@ -1,6 +1,7 @@
 # Chapter 1: Set Up Your Environment
 
-In this chapter, you'll set up your development environment, create a React application, and connect it to your Neo4j database.
+In this chapter, you'll set up your development environment, create a React application, and connect it to your Neo4j database using a GraphQL DataAPI.
+
 
 ## Create Your React Application
 
@@ -11,11 +12,11 @@ npm create vite@latest movie-manager -- --template react-ts
 cd movie-manager
 ```
 
-This creates a new directory called `movie-manager` with a basic React + TypeScript setup.
+This creates a new directory called `movie-manager` with a basic React + TypeScript setup.  The template website will be running at http://localhost:5173.   Press CTRL+C to stop the website running.
 
 ## Install Required Dependencies
 
-Install the packages you'll need for this tutorial:
+Install the packages you'll need for this tutorial.  Make sure you are in the ```movie-manager``` folder and then. 
 
 ```bash
 npm install
@@ -36,22 +37,62 @@ These packages provide:
 
 1. Log in to your [Neo4j Aura Console](https://console.neo4j.io/)
 2. Open your database instance
-3. Click on "Query" to open the Neo4j Browser
-4. Run this command to load the Movies dataset:
+3. Select "Connect" and then "Query" to open the Neo4j Browser
+4. When the  Welcome message is shown, select "Try Neo4j with the Movie Graph"
+5. Follow the instructions on "Step 2 Create the data". There are several Cypher statements shown.  At the top of those, there is a arrow head in a circle. Select that to create the Movie graph in your database.
 
-```cypher
-:play movie-graph
-```
-
-5. Follow the instructions in the guide to create the sample data
 
 ### Enable DataAPI GraphQL
 
-1. In the Aura Console, navigate to your database
-2. Click on the "APIs" tab
-3. Enable "DataAPI GraphQL"
-4. Note your GraphQL endpoint URL
-5. Create an API token and save it securely
+1. In the Aura Console, under Data services, select "Data APIs"
+2. Click on the "Create API"
+3. Complete the form as follows
+- API Name: MovieGraphQL
+- Instance: <The name of your Neo4j instance with the Movie Graph>
+- Instance permissions: Choose "Read & Write"
+- Select "Enable introspection"
+- Type defintions:  Copy and paste the following
+
+```CONSOLE
+type ActedInProperties @relationshipProperties {
+	roles: [String!]!
+}
+
+type Movie @node {
+	peopleActedIn: [Person!]! @relationship(type: "ACTED_IN", direction: IN, properties: "ActedInProperties")
+	peopleDirected: [Person!]! @relationship(type: "DIRECTED", direction: IN)
+	peopleProduced: [Person!]! @relationship(type: "PRODUCED", direction: IN)
+	peopleReviewed: [Person!]! @relationship(type: "REVIEWED", direction: IN, properties: "ReviewedProperties")
+	peopleWrote: [Person!]! @relationship(type: "WROTE", direction: IN)
+	released: Int!
+	tagline: String
+	title: String!
+}
+
+type Person @node {
+	actedInMovies: [Movie!]! @relationship(type: "ACTED_IN", direction: OUT, properties: "ActedInProperties")
+	born: Int
+	directedMovies: [Movie!]! @relationship(type: "DIRECTED", direction: OUT)
+	followsPeople: [Person!]! @relationship(type: "FOLLOWS", direction: OUT)
+	name: String!
+	peopleFollows: [Person!]! @relationship(type: "FOLLOWS", direction: IN)
+	producedMovies: [Movie!]! @relationship(type: "PRODUCED", direction: OUT)
+	reviewedMovies: [Movie!]! @relationship(type: "REVIEWED", direction: OUT, properties: "ReviewedProperties")
+	wroteMovies: [Movie!]! @relationship(type: "WROTE", direction: OUT)
+}
+
+type ReviewedProperties @relationshipProperties {
+	rating: Int!
+	summary: String!
+}
+```
+
+- Our Movie management website will be running on http://localhost:5173.  This will need adding to the DataAPI GraphQL CORS policy. Select "Add allowed origin" and enter http://localhost:5173
+- Access will be controlled by use of an API Key.  Under Authentication Providers, select "Add authentication provider".  
+- Make sure Type is set to "API Key" and enter a name of "MovieGraphQLKey"
+- Select "Create"
+5. The DataAPI GraphQL endpoint will be created.  This can take a few minutes to complete.  
+6. 
 
 Your endpoint will look like: `https://your-instance-id.databases.neo4j.io/graphql`
 
