@@ -23,9 +23,70 @@ query {
 
 This query asks for all movies, but only retrieves the `title` and `released` fields.
 
+Lets now setup our React application to support GraphQL 
+
+## Create the GraphQL Client
+
+Create a new directory and file for your GraphQL client configuration:
+
+```bash
+mkdir src/lib
+touch src/lib/graphql-client.ts
+```
+
+Add the following code to `src/lib/graphql-client.ts`:
+
+```typescript
+import { GraphQLClient } from 'graphql-request';
+
+export const graphqlClient = new GraphQLClient(
+  import.meta.env.VITE_NEO4J_GRAPHQL_URL,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": `${import.meta.env.VITE_NEO4J_GRAPHQL_TOKEN}`,
+    },
+  }
+);
+```
+You will notice that our headers does not contain an authorization key / value pair.  This because the Neo4j DataAPI GraphQL endpoint expects to have an x-api-key that contains an API Key for authentication. 
+
+This creates a configured GraphQL client that will authenticate with your Neo4j database.
+
+## Set Up React Query
+
+Update your `src/main.tsx` to include React Query:
+
+```typescript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import App from './App.tsx';
+import './index.css';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <App />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </React.StrictMode>,
+);
+```
+
 ## Define Your Type Definitions
 
-First, create TypeScript types that match your data structure. Create a new directory and file:
+As we are using TypeScript, we will need to define types that match teh data structure. Create a new directory and file:
 
 ```bash
 mkdir src/types
@@ -44,8 +105,8 @@ export interface Movie {
   title: string;
   released?: number;
   tagline?: string;
-  actors?: Person[];
-  directors?: Person[];
+  peopleActedIn?: Person[];
+  peopleDirected?: Person[];
 }
 ```
 
@@ -64,22 +125,16 @@ Add your first query to `src/graphql/operations.ts`:
 import { gql } from 'graphql-request';
 
 export const GET_MOVIES = gql`
-  query GetMovies($limit: Int, $offset: Int) {
-    movies(
-      options: { 
-        limit: $limit, 
-        offset: $offset, 
-        sort: [{ released: DESC }] 
-      }
-    ) {
+  query GetMovies {
+    movies {
       title
       released
       tagline
-      actors {
+      peopleActedIn {
         name
         born
       }
-      directors {
+      peopleDirected {
         name
         born
       }
@@ -91,10 +146,8 @@ export const GET_MOVIES = gql`
 Let's break down what this query does:
 
 - **`query GetMovies`**: Names the query for debugging
-- **`$limit` and `$offset`**: Variables for pagination
-- **`options`**: Configures sorting (newest movies first) and limits results
-- **`actors` and `directors`**: Traverses relationships to get connected people
 - **Fields like `title`, `released`, `tagline`**: Specifies exactly which data to fetch
+- **peopleActedIn and peopleDirected**: Specifies the relationship between a Movie and its' actors and directors
 
 ## Build a Movie List Component
 
@@ -111,7 +164,7 @@ Add this code to `src/components/MovieList.tsx`:
 import { useQuery } from '@tanstack/react-query';
 import { graphqlClient } from '../lib/graphql-client';
 import { GET_MOVIES } from '../graphql/operations';
-import { Movie } from '../types/movie';
+import type { Movie } from '../types/movie';
 
 interface GetMoviesResponse {
   movies: Movie[];
@@ -124,7 +177,7 @@ export function MovieList() {
       graphqlClient.request<GetMoviesResponse>(GET_MOVIES, { limit: 20 })
   });
 
-  if (isLoading) {
+ if (isLoading) {
     return <div className="loading">Loading movies...</div>;
   }
 
@@ -140,7 +193,7 @@ export function MovieList() {
     return <div className="empty">No movies found</div>;
   }
 
-  return (
+return (
     <div className="movie-list">
       <h2>Movies</h2>
       <div className="movie-grid">
@@ -152,17 +205,17 @@ export function MovieList() {
               <p className="tagline">"{movie.tagline}"</p>
             )}
             
-            {movie.actors && movie.actors.length > 0 && (
+            {movie.peopleActedIn?.length > 0 && (
               <div className="people">
                 <strong>Cast:</strong>
-                <span> {movie.actors.map(a => a.name).join(', ')}</span>
+                <span> {movie.peopleActedIn?.map(a => a.name).join(', ')}</span>
               </div>
             )}
             
-            {movie.directors && movie.directors.length > 0 && (
+            {movie.peopleDirected?.length > 0  && (
               <div className="people">
                 <strong>Directed by:</strong>
-                <span> {movie.directors.map(d => d.name).join(', ')}</span>
+                <span> {movie.peopleDirected.map(d => d.name).join(', ')}</span>
               </div>
             )}
           </div>
@@ -171,6 +224,8 @@ export function MovieList() {
     </div>
   );
 }
+
+
 ```
 
 ### Understanding React Query
@@ -301,7 +356,9 @@ header h1 {
 
 ## Test Your Application
 
-Your application should now display movies from your Neo4j database! Open `http://localhost:5173` in your browser.
+Your application should now display movies from your Neo4j database! 
+
+Enter ```npm run dev`` and then open `http://localhost:5173` in your browser.
 
 You should see:
 - A list of movies sorted by release date
@@ -311,20 +368,22 @@ You should see:
 
 ## What You've Learned
 
-✅ How to write GraphQL queries  
-✅ Using GraphQL fragments to reuse field selections  
+✅ How to write basic GraphQL queries  
 ✅ Fetching data with React Query  
 ✅ Traversing relationships in a graph database  
 ✅ Handling loading and error states  
 ✅ Displaying nested data from related entities
 
+
 ## Try It Yourself
 
-Before moving on, try modifying the query to:
+Before moving on, try modifying the query to filter the result
 
-1. Change the sort order to show oldest movies first (change `DESC` to `ASC`)
-2. Add more fields like a movie's runtime if it exists in your schema
-3. Adjust the limit to show more or fewer movies
+1. Return only the Matrix series
+2. Show only the Movies directed by Rob Reiner
+
+
+You will find the [Neo4j GraphQL library reference on Filtering ](https://neo4j.com/docs/graphql/current/filtering/) useful for this
 
 **Next**: [Chapter 3: Create New Data](#chapter-3-create-new-data)
 

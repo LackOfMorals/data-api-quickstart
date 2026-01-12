@@ -1,6 +1,6 @@
 # Chapter 1: Set Up Your Environment
 
-In this chapter, you'll set up your development environment, create a React application, and connect it to your Neo4j database using a GraphQL DataAPI.
+In this chapter, you'll set up your development environment, create a React application from templated, and provision a GraphQL Data API for a Neo4j Aura instance. 
 
 
 ## Create Your React Application
@@ -126,72 +126,6 @@ curl --location YOUR_DATA_API_URL\
 
 This GraphQL query lists all movies with their title. 
 
-## Create the GraphQL Client
-
-Create a new directory and file for your GraphQL client configuration:
-
-```bash
-mkdir src/lib
-touch src/lib/graphql-client.ts
-```
-
-Add the following code to `src/lib/graphql-client.ts`:
-
-```typescript
-import { GraphQLClient } from 'graphql-request';
-
-export const graphqlClient = new GraphQLClient(
-  import.meta.env.VITE_NEO4J_GRAPHQL_URL,
-  {
-    headers: {
-      authorization: `Bearer ${import.meta.env.VITE_NEO4J_GRAPHQL_TOKEN}`,
-    },
-  }
-);
-```
-
-This creates a configured GraphQL client that will authenticate with your Neo4j database.
-
-## Set Up React Query
-
-Update your `src/main.tsx` to include React Query:
-
-```typescript
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import App from './App.tsx';
-import './index.css';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  </React.StrictMode>,
-);
-```
-
-## Test Your Setup
-
-Start your development server:
-
-```bash
-npm run dev
-```
-
-Open your browser to `http://localhost:5173`. You should see the default Vite + React page.
 
 If everything works, you're ready to move on to the next chapter!
 
@@ -201,9 +135,7 @@ If everything works, you're ready to move on to the next chapter!
 ✅ Installed necessary dependencies  
 ✅ Set up a Neo4j database with the Movies dataset  
 ✅ Enabled DataAPI GraphQL  
-✅ Configured your application to connect to Neo4j  
-✅ Set up React Query for data management
-
+ 
 **Next**: [Chapter 2: Read Data from Neo4j](#chapter-2-read-data-from-neo4j)
 
 ---

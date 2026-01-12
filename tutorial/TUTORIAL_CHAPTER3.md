@@ -14,19 +14,20 @@ While queries read data, **mutations** modify data. Mutations can:
 Here's a basic mutation:
 
 ```graphql
-mutation {
-  createMovies(input: [
-    { title: "Inception", released: 2010 }
-  ]) {
-    movies {
-      title
-      released
+mutation CreateMovies {
+    createMovies(input: { title: "AirPlane!", released: 1980 }) {
+        movies {
+            released
+            title
+        }
     }
-  }
 }
 ```
+ 
+The mutation creates a new movie and returns the created data. 
 
-The mutation creates a new movie and returns the created data.
+- ***GraphQL*** will always require you to return fields performing a mutation.
+
 
 ## Add Mutation Operations
 
@@ -36,7 +37,7 @@ Update `src/graphql/operations.ts` by adding these mutations:
 // Add after your GET_MOVIES query
 
 export const CREATE_MOVIE = gql`
-  mutation CreateMovie($title: String!, $released: Int, $tagline: String) {
+  mutation CreateMovie($title: String!, $released: Int!, $tagline: String) {
     createMovies(
       input: [{ 
         title: $title, 
@@ -100,7 +101,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { graphqlClient } from '../lib/graphql-client';
 import { CREATE_MOVIE } from '../graphql/operations';
-import { MovieFormData } from '../types/movie';
+import type { MovieFormData } from '../types/movie';
 
 interface CreateMovieResponse {
   createMovies: {
@@ -412,10 +413,10 @@ Try creating a new movie:
 
 1. Click "Add Movie" in the navigation
 2. Enter a title (required field)
-3. Optionally add a release year and tagline
+3. Add a release year (requierd field) and optionally, a tagline
 4. Click "Create Movie"
 5. You should be redirected to the movie list
-6. Your new movie should appear in the list!
+6. Your new movie should appear in the list, likely to be at the bottom of the page
 
 ## How Cache Invalidation Works
 
