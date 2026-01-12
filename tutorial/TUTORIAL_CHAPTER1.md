@@ -91,10 +91,10 @@ type ReviewedProperties @relationshipProperties {
 - Access will be controlled by use of an API Key.  Under Authentication Providers, select "Add authentication provider".  
 - Make sure Type is set to "API Key" and enter a name of "MovieGraphQLKey"
 - Select "Create"
-5. The DataAPI GraphQL endpoint will be created.  This can take a few minutes to complete.  
-6. 
+5. Select "Download and continue" to download connnection information to a local text file. 
+6. The creation process will take a few minutes. 
 
-Your endpoint will look like: `https://your-instance-id.databases.neo4j.io/graphql`
+
 
 ## Configure Your Application
 
@@ -104,14 +104,27 @@ Create a `.env` file in the root of your project:
 touch .env
 ```
 
-Add your Neo4j credentials to `.env`:
+Add your Neo4j DataAPI GraphQL endpoint information, found in the download file, to `.env`:
 
 ```env
-VITE_NEO4J_GRAPHQL_URL=https://your-instance-id.databases.neo4j.io/graphql
-VITE_NEO4J_GRAPHQL_TOKEN=your-api-token-here
+VITE_NEO4J_GRAPHQL_URL=YOUR_DATA_API_URL
+VITE_NEO4J_GRAPHQL_TOKEN=YOUR_DATA_API_AUTH_PROVIDER_API_KEY
 ```
 
 > ⚠️ **Important**: Never commit your `.env` file to version control. It's already included in the `.gitignore` file created by Vite.
+
+## Test connectivity
+
+Using CURL you can quickly check that the DataAPI is working.  Enter the following into a command prompt, changing YOUR_DATA_API_URL and YOUR_DATA_API_AUTH_PROVIDER_API_KEY to match your values
+
+```bash
+curl --location YOUR_DATA_API_URL\
+  --header 'Content-Type: application/json' \
+  --header 'x-api-key: YOUR_DATA_API_AUTH_PROVIDER_API_KEY' \
+  --data '{"query": "query GetMovies { movies { title }}"}'
+```
+
+This GraphQL query lists all movies with their title. 
 
 ## Create the GraphQL Client
 
