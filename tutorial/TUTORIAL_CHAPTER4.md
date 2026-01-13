@@ -8,20 +8,12 @@ Update `src/graphql/operations.ts` with an update mutation:
 
 ```typescript
 // Add this after CREATE_MOVIE
-
 export const UPDATE_MOVIE = gql`
-  mutation UpdateMovie(
-    $title: String!
-    $released: Int
-    $tagline: String
-  ) {
-    updateMovies(
-      where: { title: $title }
-      update: { 
-        released: $released, 
-        tagline: $tagline 
-      }
-    ) {
+  mutation UpdateMovie($title: String!, $released: Int, $tagline: String) {
+     updateMovies(
+      where: {title: {eq: $title}}
+      update: {tagline: {set: $tagline}, released: {set: $released}}
+  ){
       movies {
         title
         released
@@ -34,7 +26,8 @@ export const UPDATE_MOVIE = gql`
 
 Notice the mutation has two parts:
 - **`where`**: Identifies which movie to update (by title)
-- **`update`**: Specifies which fields to change
+- **`update`**: Specifies which fields to change - tagline and released
+
 
 ## Update the Movie Form
 
@@ -45,7 +38,7 @@ import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { graphqlClient } from '../lib/graphql-client';
 import { CREATE_MOVIE, UPDATE_MOVIE } from '../graphql/operations';
-import { Movie, MovieFormData } from '../types/movie';
+import type { Movie, MovieFormData } from '../types/movie';
 
 interface CreateMovieResponse {
   createMovies: {
@@ -225,7 +218,7 @@ Update `src/components/MovieList.tsx` to add edit functionality:
 import { useQuery } from '@tanstack/react-query';
 import { graphqlClient } from '../lib/graphql-client';
 import { GET_MOVIES } from '../graphql/operations';
-import { Movie } from '../types/movie';
+import type { Movie } from '../types/movie';
 
 interface GetMoviesResponse {
   movies: Movie[];
@@ -308,7 +301,7 @@ Modify `src/App.tsx` to handle the edit state:
 import { useState } from 'react';
 import { MovieList } from './components/MovieList';
 import { MovieForm } from './components/MovieForm';
-import { Movie } from './types/movie';
+import type { Movie } from './types/movie';
 import './App.css';
 
 function App() {
@@ -416,7 +409,7 @@ Note that you can't edit the title - this is because we're using the title as th
 
 ## Why Not Allow Title Edits?
 
-In a graph database, we need a way to uniquely identify nodes. We're using the title as our identifier (`where: { title: $title }`). If we allowed title changes, we'd need to:
+In a graph database, we need a way to uniquely identify nodes. We're using the title as our identifier (`where: {title: {eq: $title}}`). If we allowed title changes, we'd need to:
 
 1. Use a different identifier (like an ID field)
 2. Or implement special logic to handle title changes
@@ -438,8 +431,7 @@ Enhance the update functionality:
 
 1. Add a confirmation message after successful updates
 2. Implement "Cancel" that asks for confirmation if the form has changes
-3. Add a "Last Updated" timestamp (you'd need to add this to your schema)
-4. Show a visual indicator when a movie has been recently updated
+
 
 **Next**: [Chapter 5: Delete Data](#chapter-5-delete-data)
 
