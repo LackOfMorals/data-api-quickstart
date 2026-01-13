@@ -119,7 +119,6 @@ export const DELETE_MOVIE = gql`
     nodesDeleted
   }
 }
-
 `;
 
 // Person CRUD

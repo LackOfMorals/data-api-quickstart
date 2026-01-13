@@ -8,21 +8,19 @@ Update `src/graphql/operations.ts`:
 
 ```typescript
 // Add this after UPDATE_MOVIE
-
 export const DELETE_MOVIE = gql`
   mutation DeleteMovie($title: String!) {
-    deleteMovies(where: { title: $title }) {
-      nodesDeleted
-      relationshipsDeleted
-    }
+  deleteMovies(where: { title: { eq: $title } }) {
+    nodesDeleted
   }
+}
 `;
 ```
 
 This mutation:
 - Uses a `where` clause to find the movie by title
-- Returns `nodesDeleted` (number of nodes removed)
-- Returns `relationshipsDeleted` (number of relationships removed)
+- Returns `nodesDeleted` (number of nodes removed).  Recall that you always have to return _something_ after a mutation. 
+
 
 ## Update Movie List with Delete
 
@@ -32,7 +30,7 @@ Modify `src/components/MovieList.tsx` to add delete functionality:
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { graphqlClient } from '../lib/graphql-client';
 import { GET_MOVIES, DELETE_MOVIE } from '../graphql/operations';
-import { Movie } from '../types/movie';
+import type { Movie } from '../types/movie';
 
 interface GetMoviesResponse {
   movies: Movie[];
@@ -116,17 +114,17 @@ export function MovieList({ onEdit }: MovieListProps) {
               <p className="tagline">"{movie.tagline}"</p>
             )}
             
-            {movie.actors && movie.actors.length > 0 && (
+            {movie.peopleActedIn?.length > 0 && (
               <div className="people">
                 <strong>Cast:</strong>
-                <span> {movie.actors.map(a => a.name).join(', ')}</span>
+                <span> {movie.peopleActedIn?.map(a => a.name).join(', ')}</span>
               </div>
             )}
             
-            {movie.directors && movie.directors.length > 0 && (
+            {movie.peopleDirected?.length > 0  && (
               <div className="people">
                 <strong>Directed by:</strong>
-                <span> {movie.directors.map(d => d.name).join(', ')}</span>
+                <span> {movie.peopleDirected.map(d => d.name).join(', ')}</span>
               </div>
             )}
 
@@ -325,11 +323,10 @@ And corresponding styles in `App.css`:
 
 Enhance the delete functionality:
 
-1. Implement the custom ConfirmDialog component
-2. Add an "undo" feature (you'd need to store deleted data temporarily)
-3. Show a success message after deletion
-4. Add the ability to delete multiple movies at once (batch deletion)
-5. Add a "trash" view where deleted items can be restored within 30 days
+1. Implement the custom ConfirmDialog component from above
+2. Show a success message after deletion
+3. Add the ability to delete multiple movies at once (batch deletion)
+
 
 **Next**: [Chapter 6: Manage Relationships](#chapter-6-manage-relationships)
 
