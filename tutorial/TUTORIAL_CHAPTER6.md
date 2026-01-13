@@ -13,25 +13,62 @@ In GraphQL, we manage relationships using `connect` and `disconnect` operations:
 
 ```graphql
 # Connect an actor to a movie
-updateMovies(
-  where: { title: "The Matrix" }
-  connect: { 
-    actors: { 
-      where: { node: { name: "Keanu Reeves" } } 
-    } 
+mutation AssignActor($movieTitle: String!, $actorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleActedIn: {
+        connect: {
+          edge: { roles: "actor" }
+          where: { node: { name: { eq: $actorName } } }
+        }
+      }
+    }
+  ) {
+    movies {
+      title
+      peopleActedIn {
+        name
+      }
+    }
   }
-)
+}
+```
+
+- **Filter** for a particular movie `where: { title: { eq: $movieTitle } }`
+- We link a movie with an actor by updating **peopleActedIn**  using `where: { node: { name: { eq: $actorName } } }`
+- Like any other **mutation**, we always return fields; the movie and the name of the actor
+
 
 # Disconnect an actor from a movie
-updateMovies(
-  where: { title: "The Matrix" }
-  disconnect: { 
-    actors: { 
-      where: { node: { name: "Keanu Reeves" } } 
-    } 
+
+```graphql
+mutation RemoveActor($movieTitle: String!, $actorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleActedIn: {
+        disconnect: {
+          where: { node: { name: { eq: $actorName } } }
+        }
+      }
+    }
+  ) {
+    movies {
+      title
+      peopleActedIn {
+        name
+      }
+    }
   }
-)
+}
 ```
+The GraphQL statement to remove an actor from a movie is very similar to that used to assign them.  This time we use **disconnect**
+
+- We **find** the actor by using `where: { node: { name: { eq: $actorName } } }`
+
+Lets add these mutations to our GraphQL statements.
+
 
 ## Add Relationship Mutations
 
@@ -42,88 +79,105 @@ Update `src/graphql/operations.ts`:
 
 // First, add a query to get all people
 export const GET_PEOPLE = gql`
-  query GetPeople($limit: Int) {
-    people(options: { limit: $limit, sort: [{ name: ASC }] }) {
+  query GetPeople {
+    people {
       name
       born
     }
   }
 `;
 
+
 // Relationship management mutations
 export const ASSIGN_ACTOR = gql`
-  mutation AssignActor($movieTitle: String!, $actorName: String!) {
-    updateMovies(
-      where: { title: $movieTitle }
-      connect: { 
-        actors: { 
-          where: { node: { name: $actorName } } 
-        } 
-      }
-    ) {
-      movies {
-        title
-        actors {
-          name
+mutation AssignActor($movieTitle: String!, $actorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleActedIn: {
+        connect: {
+          edge: { roles: "actor" }
+          where: { node: { name: { eq: $actorName } } }
         }
       }
     }
-  }
-`;
-
-export const REMOVE_ACTOR = gql`
-  mutation RemoveActor($movieTitle: String!, $actorName: String!) {
-    updateMovies(
-      where: { title: $movieTitle }
-      disconnect: { 
-        actors: { 
-          where: { node: { name: $actorName } } 
-        } 
-      }
-    ) {
-      movies {
-        title
+  ) {
+    movies {
+      title
+      peopleActedIn {
+        name
       }
     }
   }
+}
+`;
+
+
+export const REMOVE_ACTOR = gql`
+mutation RemoveActor($movieTitle: String!, $actorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleActedIn: {
+        disconnect: {
+          where: { node: { name: { eq: $actorName } } }
+        }
+      }
+    }
+  ) {
+    movies {
+      title
+      peopleActedIn {
+        name
+      }
+    }
+  }
+}
 `;
 
 export const ASSIGN_DIRECTOR = gql`
-  mutation AssignDirector($movieTitle: String!, $directorName: String!) {
-    updateMovies(
-      where: { title: $movieTitle }
-      connect: { 
-        directors: { 
-          where: { node: { name: $directorName } } 
-        } 
+mutation AssignDirector($movieTitle: String!, $directorName: String!) {
+  updateMovies(
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleDirected: {
+        connect: { where: { node: { name: { eq: $directorName } } } }
       }
-    ) {
-      movies {
-        title
-        directors {
-          name
-        }
+    }
+  ) {
+    movies {
+      title
+      peopleDirected {
+        name
       }
     }
   }
+}
 `;
+
 
 export const REMOVE_DIRECTOR = gql`
   mutation RemoveDirector($movieTitle: String!, $directorName: String!) {
     updateMovies(
-      where: { title: $movieTitle }
-      disconnect: { 
-        directors: { 
-          where: { node: { name: $directorName } } 
-        } 
+    where: { title: { eq: $movieTitle } }
+    update: {
+      peopleDirected: {
+        disconnect: {
+          where: { node: { name: { eq: $directorName } } }
+        }
       }
-    ) {
+    }
+  ) {
       movies {
         title
+        peopleDirected {
+          name
+        }
       }
     }
   }
 `;
+
 ```
 
 ## Create Relationship Manager Component
@@ -141,7 +195,7 @@ import {
   REMOVE_DIRECTOR,
   GET_PEOPLE 
 } from '../graphql/operations';
-import { Movie } from '../types/movie';
+import type { Movie } from '../types/movie';
 
 interface Props {
   movie: Movie;
@@ -204,11 +258,11 @@ export function RelationshipManager({ movie, onComplete }: Props) {
     }
 
     // Check if already assigned
-    if (relationType === 'actor' && movie.actors?.some(a => a.name === selectedPerson)) {
+    if (relationType === 'actor' && movie.peopleActedIn?.some(a => a.name === selectedPerson)) {
       alert('This person is already an actor in this movie');
       return;
     }
-    if (relationType === 'director' && movie.directors?.some(d => d.name === selectedPerson)) {
+    if (relationType === 'director' && movie.peopleDirected?.some(d => d.name === selectedPerson)) {
       alert('This person is already a director of this movie');
       return;
     }
@@ -249,9 +303,9 @@ export function RelationshipManager({ movie, onComplete }: Props) {
   // Get available people (not already assigned in current role)
   const availablePeople = peopleData?.people.filter(person => {
     if (relationType === 'actor') {
-      return !movie.actors?.some(a => a.name === person.name);
+      return !movie.peopleActedIn?.some(a => a.name === person.name);
     } else {
-      return !movie.directors?.some(d => d.name === person.name);
+      return !movie.peopleDirected?.some(d => d.name === person.name);
     }
   }) || [];
 
@@ -264,10 +318,10 @@ export function RelationshipManager({ movie, onComplete }: Props) {
 
       <div className="current-relationships">
         <div className="relationship-section">
-          <h4>Actors ({movie.actors?.length || 0})</h4>
-          {movie.actors && movie.actors.length > 0 ? (
+          <h4>Actors ({movie.peopleActedIn?.length || 0})</h4>
+          {movie.peopleActedIn && movie.peopleActedIn.length > 0 ? (
             <ul className="person-list">
-              {movie.actors.map(actor => (
+              {movie.peopleActedIn.map(actor => (
                 <li key={actor.name}>
                   <div className="person-info">
                     <span className="person-name">{actor.name}</span>
@@ -291,10 +345,10 @@ export function RelationshipManager({ movie, onComplete }: Props) {
         </div>
 
         <div className="relationship-section">
-          <h4>Directors ({movie.directors?.length || 0})</h4>
-          {movie.directors && movie.directors.length > 0 ? (
+          <h4>Directors ({movie.peopleDirected?.length || 0})</h4>
+          {movie.peopleDirected && movie.peopleDirected.length > 0 ? (
             <ul className="person-list">
-              {movie.directors.map(director => (
+              {movie.peopleDirected.map(director => (
                 <li key={director.name}>
                   <div className="person-info">
                     <span className="person-name">{director.name}</span>
@@ -422,7 +476,7 @@ import { useState } from 'react';
 import { MovieList } from './components/MovieList';
 import { MovieForm } from './components/MovieForm';
 import { RelationshipManager } from './components/RelationshipManager';
-import { Movie } from './types/movie';
+import type { Movie } from './types/movie';
 import './App.css';
 
 function App() {
@@ -695,10 +749,7 @@ The `disconnect` operation removes a relationship:
 Enhance relationship management:
 
 1. Add relationship properties (e.g., roles for actors)
-2. Implement bulk assignment (add multiple people at once)
-3. Show movies a person is connected to when assigning
-4. Add drag-and-drop for reordering people
-5. Create a dedicated "People" view to manage all people
+2. Create a dedicated "People" view to manage all people
 
 **Next**: [Chapter 7: Search and Filter](#chapter-7-search-and-filter)
 

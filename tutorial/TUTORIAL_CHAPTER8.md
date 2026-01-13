@@ -1,6 +1,6 @@
 # Chapter 8: Deploy Your Application
 
-Congratulations! You've built a fully functional movie management application. In this final chapter, you'll learn how to deploy your application so others can use it.
+Congratulations! You've taken the first steps towards creating a movie management web application. In this final chapter, you'll learn how to deploy your application so others can use it.
 
 ## Prepare for Production
 

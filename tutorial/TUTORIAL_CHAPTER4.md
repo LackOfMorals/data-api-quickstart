@@ -263,14 +263,14 @@ export function MovieList({ onEdit }: MovieListProps) {
               <p className="tagline">"{movie.tagline}"</p>
             )}
             
-            {movie.peopleActedIn?.length > 0 && (
+            {movie.peopleActedIn && movie.peopleActedIn?.length > 0 && (
               <div className="people">
                 <strong>Cast:</strong>
                 <span> {movie.peopleActedIn?.map(a => a.name).join(', ')}</span>
               </div>
             )}
             
-            {movie.peopleDirected?.length > 0  && (
+            {movie.peopleDirected && movie.peopleDirected?.length > 0  && (
               <div className="people">
                 <strong>Directed by:</strong>
                 <span> {movie.peopleDirected.map(d => d.name).join(', ')}</span>
